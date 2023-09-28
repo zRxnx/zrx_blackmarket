@@ -1,14 +1,9 @@
 if not Config.CheckForUpdates then return end
-local GetCurrentResourceName = GetCurrentResourceName
-local GetResourceMetadata = GetResourceMetadata
-local PerformHttpRequest = PerformHttpRequest
-local json = json
-local Wait = Wait
-
 local curResName = GetCurrentResourceName()
 local curVersion = GetResourceMetadata(curResName, 'version')
 local resourceName = 'zrx_blackmarket'
 local continueCheck = true
+local PerformHttpRequest = PerformHttpRequest
 
 local getRepoInformations = function()
     local repoVersion, repoURL
@@ -25,11 +20,11 @@ local getRepoInformations = function()
         end
     end, 'GET')
 
-    repeat
-        Wait(500)
-    until (repoVersion and repoURL)
+    lib.waitFor(function()
+        return (repoVersion and repoURL)
+    end, 'Version check Timeout', 5000)
 
-    return repoVersion, repoURL
+    return repoVersion or 'INVALID RESPONSE', repoURL or 'INVALID RESPONSE'
 end
 
 local checkVersion = function()

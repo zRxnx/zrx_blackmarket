@@ -1,11 +1,8 @@
 ESX, PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA = Config.EsxImport(), {}, {}, {}, {}
 local GetPlayers = GetPlayers
-local RegisterNetEvent = RegisterNetEvent
 local GetPlayerPed = GetPlayerPed
 local GetEntityCoords = GetEntityCoords
 local vector3 = vector3
-local CreateThread = CreateThread
-local SetTimeout = SetTimeout
 
 RegisterNetEvent('esx:playerLoaded', function(player)
     PLAYER_CACHE[player] = GetPlayerData(player)

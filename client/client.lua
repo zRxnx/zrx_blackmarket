@@ -1,12 +1,9 @@
 ESX, COOLDOWN, LOC_DATA, PED_DATA, BLIP_DATA = Config.EsxImport(), false, {}, {}, {}
 local GetCurrentResourceName = GetCurrentResourceName
-local RegisterNetEvent = RegisterNetEvent
-local AddEventHandler = AddEventHandler
 local DoesEntityExist = DoesEntityExist
 local SetPedAsNoLongerNeeded = SetPedAsNoLongerNeeded
 local SetEntityAsMissionEntity = SetEntityAsMissionEntity
 local DeleteEntity = DeleteEntity
-local CreateThread = CreateThread
 local vector3 = vector3
 local GetEntityCoords = GetEntityCoords
 local CreatePed = CreatePed
