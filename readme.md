@@ -27,6 +27,8 @@ An advanced blackmarket system for FiveM
 
 ## Preview
 
+### [Video](https://youtu.be/zmjMAVbzn8M?si=xQVU_vrsMFvLIzIe)
+
 ![Discord Log](https://i.imgur.com/UVmuohy.png)
 ![Main Page](https://i.imgur.com/7nNtYbp.png)
 

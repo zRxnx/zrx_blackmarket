@@ -90,6 +90,7 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
 
     if Config.Alert.enabled then
         SetTimeout(Config.Alert.after * 1000, function()
+            Config.Notification(xPlayer.source, Strings.sawn)
             StartSyncBlip(pedCoords)
         end)
     end

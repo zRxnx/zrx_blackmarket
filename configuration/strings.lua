@@ -8,6 +8,7 @@ Strings = {
     click_action = 'Click to interact',
     contact_admin = 'Contact a administrator for this issue',
     alert = 'BLACKMARKERT ALERT',
+    sawn = 'You got sawn, the cops are notified',
 
     action = 'Action',
     action_desc = 'What do you want to do?',
