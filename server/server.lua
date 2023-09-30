@@ -1,4 +1,4 @@
-ESX, PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA = Config.EsxImport(), {}, {}, {}, {}
+ESX, PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS = Config.EsxImport(), {}, {}, {}, {}, {}
 local GetPlayers = GetPlayers
 local GetPlayerPed = GetPlayerPed
 local GetEntityCoords = GetEntityCoords
@@ -12,6 +12,7 @@ CreateThread(function()
     for i, data in pairs(GetPlayers()) do
         data = tonumber(data)
         PLAYER_CACHE[data] = GetPlayerData(data)
+        PLAYERS[data] = true
     end
 
     math.randomseed(os.time())
@@ -27,6 +28,10 @@ lib.callback.register('zrx_blackmarket:server:getLocations', function(source)
     else
         Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:getLocations"')
     end
+end)
+
+AddEventHandler('playerDropped', function()
+    PLAYERS[source] = nil
 end)
 
 RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, amount, price)
@@ -91,5 +96,5 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
 end)
 
 exports('hasCooldown', function(player)
-    return not not COOLDOWN[player]
+    return not not COOLDOWN[PLAYER_CACHE[player].identifier]
 end)

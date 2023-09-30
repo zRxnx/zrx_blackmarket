@@ -7,7 +7,6 @@ local GetPlayerPing = GetPlayerPing
 local GetResourceMetadata = GetResourceMetadata
 local GetCurrentResourceName = GetCurrentResourceName
 local TriggerClientEvent = TriggerClientEvent
-local GetPlayers = GetPlayers
 local GetPlayerIdentifierByType = GetPlayerIdentifierByType
 
 GetPlayerData = function(player)
@@ -150,15 +149,16 @@ end
 Player = {
     HasCooldown = function(player)
         if not Config.Cooldown then return false end
+        local identifier = PLAYER_CACHE[player].license
 
-        if COOLDOWN[player] then
-            if os.time() - Config.Cooldown > COOLDOWN[player] then
-                COOLDOWN[player] = nil
+        if COOLDOWN[identifier] then
+            if os.time() - Config.Cooldown > COOLDOWN[identifier] then
+                COOLDOWN[identifier] = nil
             else
                 return true
             end
         else
-            COOLDOWN[player] = os.time()
+            COOLDOWN[identifier] = os.time()
         end
 
         return false
@@ -168,9 +168,8 @@ Player = {
 StartSyncBlip = function(coords)
     local xPlayer
 
-    for k, data2 in pairs(GetPlayers()) do
-        data2 = tonumber(data2)
-        xPlayer = ESX.GetPlayerFromId(data2)
+    for player, state in pairs(PLAYERS) do
+        xPlayer = ESX.GetPlayerFromId(player)
 
         if Config.Alert.jobs[xPlayer.job.name] then
             Config.Notification(Strings.alert)
