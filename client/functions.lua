@@ -1,8 +1,8 @@
 local TriggerServerEvent = TriggerServerEvent
 
 OpenShopMenu = function(data)
-    if Config.BlockedJobs[ESX.PlayerData.job.name] then
-        return Config.Notification(nil, Strings.not_permitted)
+    if Config.BlockedJobs[CORE.Bridge.getVariables().job.name] then
+        return CORE.Bridge.notification(Strings.not_permitted)
     end
 
     data = data.args
@@ -12,11 +12,11 @@ OpenShopMenu = function(data)
         local metadata = {}
 
         if data2.option.buy then
-            metadata[#metadata + 1] = { label = Strings.buy, value = ('%s€'):format(data2.option.buy) }
+            metadata[#metadata + 1] = { label = Strings.buy, value = (Strings.buy_desc):format(data2.option.buy) }
         end
 
         if data2.option.sell then
-            metadata[#metadata + 1] = { label = Strings.sell, value = ('%s€'):format(data2.option.sell) }
+            metadata[#metadata + 1] = { label = Strings.sell, value = (Strings.sell_desc):format(data2.option.sell) }
         end
 
         if #metadata <= 0 then
@@ -42,7 +42,7 @@ OpenShopMenu = function(data)
                 end
 
                 if #select <= 0 then
-                    return Config.Notification(nil, Strings.contact_admin)
+                    return CORE.Bridge.notification(Strings.contact_admin)
                 end
 
                 local input = lib.inputDialog(data2.name, {
@@ -51,7 +51,7 @@ OpenShopMenu = function(data)
                 })
 
                 if not input then
-                    return Config.Notification(nil, Strings.dialog_error)
+                    return CORE.Bridge.notification(Strings.dialog_error)
                 elseif input[1] == 'buy' then
                     TriggerServerEvent('zrx_blackmarket:server:processAction', 'buy', data2.item, input[2], data2.option.buy)
                 elseif input[1] == 'sell' then

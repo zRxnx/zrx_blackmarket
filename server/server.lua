@@ -1,18 +1,23 @@
-ESX, PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS = Config.EsxImport(), {}, {}, {}, {}, {}
+CORE = exports.zrx_utility:GetUtility()
+PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS = {}, {}, {}, {}, {}
 local GetPlayers = GetPlayers
 local GetPlayerPed = GetPlayerPed
 local GetEntityCoords = GetEntityCoords
 local vector3 = vector3
 
-RegisterNetEvent('esx:playerLoaded', function(player)
-    PLAYER_CACHE[player] = GetPlayerData(player)
+RegisterNetEvent('zrx_utility:bridge:playerLoaded', function(player)
+    PLAYER_CACHE[player] = CORE.Server.GetPlayerCache(player)
 end)
 
 CreateThread(function()
-    for i, data in pairs(GetPlayers()) do
-        data = tonumber(data)
-        PLAYER_CACHE[data] = GetPlayerData(data)
-        PLAYERS[data] = true
+    if Config.CheckForUpdates then
+        CORE.Server.CheckVersion('zrx_blackmarket')
+    end
+
+    for i, player in pairs(GetPlayers()) do
+        player = tonumber(player)
+        PLAYER_CACHE[player] = CORE.Server.GetPlayerCache(player)
+        PLAYERS[player] = true
     end
 
     math.randomseed(os.time())
@@ -24,7 +29,12 @@ end)
 lib.callback.register('zrx_blackmarket:server:getLocations', function(source)
     if not FETCHED[source] then
         FETCHED[source] = true
-	    return LOC_DATA
+
+        lib.waitFor(function()
+            return #LOC_DATA == #Config.Locations
+        end, 'Location timeout', 10000)
+
+	    return LOC_DATA or {}
     else
         Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:getLocations"')
     end
@@ -36,13 +46,12 @@ end)
 
 RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, amount, price)
     price = price * amount
-    local xPlayer = ESX.GetPlayerFromId(source)
-    local ped = GetPlayerPed(xPlayer.source)
+    local ped = GetPlayerPed(source)
 	local pedCoords = GetEntityCoords(ped)
     local isAllowed = false
 
-    if Player.HasCooldown(xPlayer.source) then
-        return Config.Notification(xPlayer.source, Strings.on_cooldown)
+    if Player.HasCooldown(source) then
+        return CORE.Bridge.notification(source, Strings.on_cooldown)
     end
 
     for i, data in pairs(Config.Locations) do
@@ -53,44 +62,63 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
 	end
 
 	if not isAllowed then
-		return Config.PunishPlayer(xPlayer.source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
+		return Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
 	end
 
     if action == 'buy' then
-        local xMoney = xPlayer.getAccount(Config.Account).money
+        local xMoney = CORE.Bridge.getAccount(source, Config.Account).money
 
         if xMoney >= price then
-            if xPlayer.canCarryItem(item, amount) then
-                xPlayer.removeAccountMoney(Config.Account, price)
-                xPlayer.addInventoryItem(item, amount)
-                Config.Notification(xPlayer.source, (Strings.bought):format(amount, item, ESX.Math.GroupDigits(price)))
+            if CORE.Bridge.canCarryItem(source, item, amount) then
+                CORE.Bridge.removeAccountMoney(source, Config.Account, price)
+                CORE.Bridge.addInventoryItem(source, item, amount)
+                CORE.Bridge.notification(source, (Strings.bought):format(amount, item, lib.math.groupdigits(price, '.')))
 
-                if Webhook.Settings.bought then
-                    DiscordLog(xPlayer.source, 'BOUGHT ITEMS', ('Player bought %sx %s for %s'):format(amount, item, ESX.Math.GroupDigits(price)), 'bought')
+                if Webhook.Links.bought:len() > 0 then
+                    local message = ([[
+                        The player bought items
+            
+                        Item: **%s**
+                        Amount: **%s**
+                        Cost: **%s**
+                    ]]):format(item, amount, lib.math.groupdigits(price, '.'))
+
+                    CORE.Server.DiscordLog(source, 'BOUGHT', message, Webhook.Links.bought)
                 end
             else
-                Config.Notification(xPlayer.source, (Strings.cannot_carry):format(amount, item))
+                CORE.Bridge.notification(source, (Strings.cannot_carry):format(amount, item))
             end
         else
-            Config.Notification(xPlayer.source, (Strings.lack_money):format(ESX.Math.GroupDigits(price - xMoney)))
+            CORE.Bridge.notification(source, (Strings.lack_money):format(lib.math.groupdigits(price - xMoney, '.')))
         end
     elseif action == 'sell' then
-        if xPlayer.getInventoryItem(item).count >= amount then
-            xPlayer.addAccountMoney(Config.Account, price)
-            xPlayer.removeInventoryItem(item, amount)
-            Config.Notification(xPlayer.source, (Strings.sold):format(amount, item, ESX.Math.GroupDigits(price)))
+        local count = CORE.Bridge.getItemCount(source, item)
 
-            if Webhook.Settings.bought then
-                DiscordLog(xPlayer.source, 'SOLD ITEMS', ('Player sold %sx %s for %s'):format(amount, item, ESX.Math.GroupDigits(price)), 'sold')
+        if count >= amount then
+            CORE.Bridge.addAccountMoney(source, Config.Account, price)
+            CORE.Bridge.removeInventoryItem(source, item, amount)
+            CORE.Bridge.notification(source, (Strings.sold):format(amount, item, lib.math.groupdigits(price, '.')))
+
+            if Webhook.Links.sold:len() > 0 then
+                local message = ([[
+                    The player sold items
+        
+                    Item: **%s**
+                    Amount: **%s**
+                    Cost: **%s**
+                ]]):format(item, amount, lib.math.groupdigits(price, '.'))
+
+                CORE.Server.DiscordLog(source, 'SOLD', message, Webhook.Links.sold)
             end
         else
-            Config.Notification(xPlayer.source, (Strings.lack_items):format(amount, item))
+            CORE.Bridge.notification(source, (Strings.lack_items):format(amount, item))
         end
     end
 
     if Config.Alert.enabled then
+        local player = source
         SetTimeout(Config.Alert.after * 1000, function()
-            Config.Notification(xPlayer.source, Strings.sawn)
+            CORE.Bridge.notification(player, Strings.sawn)
             StartSyncBlip(pedCoords)
         end)
     end

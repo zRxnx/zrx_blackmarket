@@ -5,10 +5,10 @@ use_experimental_fxv2_oal 'yes'
 
 author 'zRxnx'
 description 'Advanced blackmarket system'
-version '1.1.3'
+version '1.2.0'
 
 dependencies {
-    'es_extended',
+    'zrx_utility',
 	'ox_lib',
     'ox_target'
 }

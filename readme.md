@@ -21,7 +21,7 @@ An advanced blackmarket system for FiveM
 
 ## Requirements
 
-- es_extended (> 1.6.0)
+- zrx_utility (latest)
 - ox_lib (latest)
 - ox_target (latest)
 
@@ -29,7 +29,7 @@ An advanced blackmarket system for FiveM
 
 ### [Video](https://youtu.be/zmjMAVbzn8M?si=xQVU_vrsMFvLIzIe)
 
-![Discord Log](https://i.imgur.com/UVmuohy.png)
+![Discord Log](https://i.imgur.com/TDfftS2.png)
 ![Main Page](https://i.imgur.com/7nNtYbp.png)
 
 ## Installation

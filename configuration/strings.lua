@@ -1,7 +1,9 @@
 Strings = {
     title = 'BLACKMARKET',
     buy = 'Buy',
+    buy_desc = '%s$',
     sell = 'Sell',
+    sell_desc = '%s$',
 
     on_cooldown = 'You are on cooldown',
     not_permitted = 'You are not permitted to do that',
@@ -19,6 +21,6 @@ Strings = {
     bought = 'You bought %sx %s for $%s',
     cannot_carry = 'You cannot carry %sx %s',
     lack_money = 'You lack $%s',
-    sold = 'You sold %sx %x for $%s',
+    sold = 'You sold %sx %s for $%s',
     lack_items = 'You lack %sx %s'
 }

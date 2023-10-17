@@ -1,4 +1,5 @@
-ESX, COOLDOWN, LOC_DATA, PED_DATA, BLIP_DATA = Config.EsxImport(), false, {}, {}, {}
+CORE = exports.zrx_utility:GetUtility()
+COOLDOWN, LOC_DATA, PED_DATA, BLIP_DATA = false, {}, {}, {}
 local GetCurrentResourceName = GetCurrentResourceName
 local DoesEntityExist = DoesEntityExist
 local SetPedAsNoLongerNeeded = SetPedAsNoLongerNeeded
@@ -15,14 +16,6 @@ local RemoveAnimDict = RemoveAnimDict
 local Wait = Wait
 local SetBlipRoute = SetBlipRoute
 local RemoveBlip = RemoveBlip
-
-RegisterNetEvent('esx:playerLoaded',function(xPlayer)
-    ESX.PlayerData = xPlayer
-end)
-
-RegisterNetEvent('esx:setJob', function(job)
-	ESX.PlayerData.job = job
-end)
 
 AddEventHandler('onResourceStop', function(res)
 	if GetCurrentResourceName() ~= res then return end
@@ -55,7 +48,7 @@ CreateThread(function()
                     },
                     onSelect = function(args)
                         if COOLDOWN then
-                            return Config.Notification(nil, Strings.on_cooldown)
+                            return CORE.Bridge.notification(Strings.on_cooldown)
                         end
 
                         StartCooldown()

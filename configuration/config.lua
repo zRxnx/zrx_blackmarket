@@ -103,31 +103,18 @@ Config.Alert = {
     end
 }
 
---| Place here your notification
-Config.Notification = function(player, msg)
-    if IsDuplicityVersion() then
-        TriggerClientEvent('esx:showNotification', player, msg, 'info')
-    else
-        ESX.ShowNotification(msg)
-    end
-end
-
 --| Place here your punish actions
 Config.PunishPlayer = function(player, reason)
     if not IsDuplicityVersion() then return end
-    if Webhook.Settings.punish then
-        DiscordLog(player, 'PUNISH', reason, 'punish')
+    if Webhook.Links.punish:len() > 0 then
+        local message = ([[
+            The player got punished
+
+            Reason: **%s**
+        ]]):format(reason)
+
+        CORE.Server.DiscordLog(player, 'PUNISH', message, Webhook.Links.punish)
     end
 
     DropPlayer(player, reason)
-end
-
---| Place here your esx import
---| Change it if you know what you are doing
-Config.EsxImport = function()
-	if IsDuplicityVersion() then
-		return exports.es_extended:getSharedObject()
-	else
-		return exports.es_extended:getSharedObject()
-	end
 end
