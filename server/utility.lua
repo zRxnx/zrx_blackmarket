@@ -45,12 +45,13 @@ local checkVersion = function()
 end
 
 CreateThread(function()
-    if curResName ~= 'zrx_blackmarket' then
-        resourceName = ('zrx_blackmarket (%s)'):format(curResName)
+    if (curResName ~= resourceName) then
+        print("^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^3!^1FATAL ERROR^3!^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1^7\n")
+        print(("^1%s has failed to load!^7\n"):format(resourceName))
+        print(("Please ensure that the resource folder is called ^2%s^7, or ^1you may encounter errors!^7\n"):format(resourceName))
+        print("^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^4-^5-^6-^8-^9-^1-^2-^3-^3!^1FATAL ERROR^3!^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1-^9-^8-^6-^5-^4-^3-^2-^1^7\n")
+        return
     end
-
-    while continueCheck do
-        PerformHttpRequest('https://github.com/zRxnx/zrx_blackmarket/releases/latest', checkVersion, 'GET')
-        Wait(3600000)
-    end
+    print(('^0[^2INFO^0] %s has started successfully!'):format(resourceName))
+    PerformHttpRequest('https://github.com/zRxnx/zrx_blackmarket/releases/latest', checkVersion, 'GET')
 end)
