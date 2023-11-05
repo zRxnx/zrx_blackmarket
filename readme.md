@@ -6,6 +6,7 @@ An advanced blackmarket system for FiveM
 
 ### Features
 
+- Random locations
 - Alert system
 - Blocked Jobs
 - Highly configurable

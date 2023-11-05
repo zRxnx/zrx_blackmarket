@@ -5,4 +5,5 @@ Webhook.Links = {
     punish = '',
     bought = '',
     sold = '',
+    randomloc = '',
 }

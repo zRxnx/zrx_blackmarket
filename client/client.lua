@@ -1,11 +1,12 @@
 CORE = exports.zrx_utility:GetUtility()
-COOLDOWN, LOC_DATA, PED_DATA, BLIP_DATA = false, {}, {}, {}
+COOLDOWN, LOC_DATA, PED_DATA, BLIP_DATA, BOX_DATA = false, {}, {}, {}, {}
 local GetCurrentResourceName = GetCurrentResourceName
 local DoesEntityExist = DoesEntityExist
 local SetPedAsNoLongerNeeded = SetPedAsNoLongerNeeded
 local SetEntityAsMissionEntity = SetEntityAsMissionEntity
 local DeleteEntity = DeleteEntity
 local vector3 = vector3
+local vector4 = vector4
 local GetEntityCoords = GetEntityCoords
 local CreatePed = CreatePed
 local FreezeEntityPosition = FreezeEntityPosition
@@ -29,17 +30,56 @@ AddEventHandler('onResourceStop', function(res)
 	end
 end)
 
-CreateThread(function()
-	LOC_DATA = lib.callback.await('zrx_blackmarket:server:getLocations', 100)
+RegisterNetEvent('zrx_blackmarket:server:randomLocation', function(index, coords)
+	local temp = Config.Locations[index]
+	LOC_DATA[index] = vector4(coords.x, coords.y, coords.z, coords[4])
 
-	for i, data in pairs(Config.Locations) do
-		exports.ox_target:addBoxZone({
+	if DoesEntityExist(PED_DATA[index]) then
+		SetPedAsNoLongerNeeded(PED_DATA[index])
+		SetEntityAsMissionEntity(PED_DATA[index], true, true)
+		DeleteEntity(PED_DATA[index])
+	end
+
+	exports.ox_target:removeZone(BOX_DATA[index])
+
+	BOX_DATA[index] = exports.ox_target:addBoxZone({
+		coords = vector3(LOC_DATA[index].x, LOC_DATA[index].y, LOC_DATA[index].z),
+		size = vector3(1, 1, 4),
+		options = {
+			{
+				icon = 'fa-solid fa-briefcase',
+				iconColor = Config.IconColor,
+				label = Strings.title,
+				distance = 1.0,
+				args = {
+					content = temp.content,
+					name = temp.name
+				},
+				onSelect = function(args)
+					if COOLDOWN then
+						return CORE.Bridge.notification(Strings.on_cooldown)
+					end
+
+					StartCooldown()
+					OpenShopMenu(args)
+					PreventPunish(index)
+				end
+			}
+		}
+	})
+end)
+
+CreateThread(function()
+	LOC_DATA = lib.callback.await('zrx_blackmarket:server:getLocations', 10000)
+
+	for i, data in ipairs(Config.Locations) do
+		BOX_DATA[i] = exports.ox_target:addBoxZone({
 			coords = vector3(LOC_DATA[i].x, LOC_DATA[i].y, LOC_DATA[i].z),
 			size = vector3(1, 1, 4),
 			options = {
 				{
-					name = 'box',
 					icon = 'fa-solid fa-briefcase',
+					iconColor = Config.IconColor,
 					label = Strings.title,
 					distance = 1.0,
                     args = {
@@ -53,6 +93,7 @@ CreateThread(function()
 
                         StartCooldown()
                         OpenShopMenu(args)
+						PreventPunish(i)
                     end
 				}
 			}
@@ -64,7 +105,7 @@ CreateThread(function()
 	while true do
 		pedCoords = GetEntityCoords(cache.ped)
 
-		for i, data in pairs(Config.Locations) do
+		for i, data in ipairs(Config.Locations) do
 			curPos = LOC_DATA[i]
 			dist = #(vector3(pedCoords.x, pedCoords.y, pedCoords.z) - vector3(LOC_DATA[i].x, LOC_DATA[i].y, LOC_DATA[i].z))
 
@@ -77,7 +118,7 @@ CreateThread(function()
 				FreezeEntityPosition(entity, true)
 				SetEntityInvincible(entity, true)
 				SetBlockingOfNonTemporaryEvents(entity, true)
-				TaskPlayAnim(entity, data.animation.dict, data.animation.name, 8.0, 0.0, -1, 1, 0, 0, 0, 0)
+				TaskPlayAnim(entity, data.animation.dict, data.animation.name, 8.0, 0.0, -1, 1, 0, false, false, false)
 
 				PED_DATA[i] = entity
 			elseif dist > Config.DrawDistance and DoesEntityExist(PED_DATA[i]) then

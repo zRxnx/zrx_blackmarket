@@ -1,9 +1,11 @@
+---@diagnostic disable: cast-local-type, need-check-nil
 CORE = exports.zrx_utility:GetUtility()
 PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS = {}, {}, {}, {}, {}
 local GetPlayers = GetPlayers
 local GetPlayerPed = GetPlayerPed
 local GetEntityCoords = GetEntityCoords
 local vector3 = vector3
+local GetGameTimer = GetGameTimer
 
 RegisterNetEvent('zrx_utility:bridge:playerLoaded', function(player)
     PLAYER_CACHE[player] = CORE.Server.GetPlayerCache(player)
@@ -20,9 +22,13 @@ CreateThread(function()
         PLAYERS[player] = true
     end
 
-    math.randomseed(os.time())
-    for i, data in pairs(Config.Locations) do
-        LOC_DATA[i] = data.coords[math.random(1, #data.coords)]
+    math.randomseed(GetGameTimer())
+    for i, data in ipairs(Config.Locations) do
+        LOC_DATA[i] = data.location.coords[math.random(1, #data.location.coords)]
+
+        if data.location.randomLocationInterval then
+            StartRandomLocation(i)
+        end
     end
 end)
 
@@ -55,14 +61,17 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
     end
 
     for i, data in pairs(Config.Locations) do
-		if #(vector3(pedCoords.x, pedCoords.y, pedCoords.z) - vector3(LOC_DATA[i].x, LOC_DATA[i].y, LOC_DATA[i].z)) < 2 then
-			isAllowed = true
-            break
-		end
+        for k, data2 in pairs(data.location.coords) do
+            if #(vector3(pedCoords.x, pedCoords.y, pedCoords.z) - vector3(data2.x, data2.y, data2.z)) < 2 then
+                isAllowed = true
+                break
+            end
+        end
 	end
 
 	if not isAllowed then
-		return Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
+        print('ban')
+		--return Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
 	end
 
     if action == 'buy' then

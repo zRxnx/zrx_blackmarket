@@ -1,4 +1,6 @@
 local TriggerServerEvent = TriggerServerEvent
+local vector3 = vector3
+local GetEntityCoords = GetEntityCoords
 
 OpenShopMenu = function(data)
     if Config.BlockedJobs[CORE.Bridge.getVariables().job.name] then
@@ -63,12 +65,10 @@ OpenShopMenu = function(data)
         ::continue::
 	end
 
-	lib.registerContext({
-		id = 'zrx_blackmarket:shopPage',
-		title = Strings.title,
-		options = MENU,
-	})
-	lib.showContext('zrx_blackmarket:shopPage')
+    CORE.Client.CreateMenu({
+        id = 'zrx_blackmarket:shopPage',
+        title = Strings.title,
+    }, MENU, Config.Menu.type ~= 'menu', Config.Menu.postition)
 end
 
 StartCooldown = function()
@@ -80,4 +80,21 @@ StartCooldown = function()
             COOLDOWN = false
         end)
     end)
+end
+
+PreventPunish = function(index)
+	CreateThread(function()
+		local pedCoords
+
+		while lib.getOpenContextMenu() == 'zrx_blackmarket:shopPage' or lib.getOpenMenu() == 'zrx_blackmarket:shopPage' do
+			pedCoords = GetEntityCoords(cache.ped)
+
+			if #(vector3(pedCoords.x, pedCoords.y, pedCoords.z) - vector3(LOC_DATA[index].x, LOC_DATA[index].y, LOC_DATA[index].z)) > 2 then
+				lib.hideContext(false)
+				lib.hideMenu(false)
+			end
+
+			Wait(500)
+		end
+	end)
 end
