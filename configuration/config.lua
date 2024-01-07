@@ -4,7 +4,7 @@ Config.CheckForUpdates = true --| Check for updates?
 Config.DrawDistance = 20 --| Distance in units to see ped
 Config.Cooldown = 3 --| In seconds
 Config.Account = 'money' --| Used account to pay/sell
-Config.IconColor  = 'rgba(173, 216, 230, 1)' --| rgba format
+Config.IconColor  = 'rgba(173, 216, 230, 1)' --| rgba format | Default
 
 Config.Menu = {
     type = 'context', --| context or menu
@@ -47,7 +47,12 @@ Config.Locations = {
                 option = {
                     buy = 50,
                     sell = false
-                }
+                },
+
+                icon = {
+                    type = 'fa-solid fa-user', --| https://fontawesome.com/search?q=coding&o=r&m=free
+                    color = 'rgba(173, 216, 230, 1)' --| rgba format
+                },
             },
             {
                 label = 'Heroin',
@@ -55,7 +60,12 @@ Config.Locations = {
                 option = {
                     buy = 55,
                     sell = false
-                }
+                },
+
+                icon = {
+                    type = 'fa-solid fa-user', --| https://fontawesome.com/search?q=coding&o=r&m=free
+                    color = 'rgba(173, 216, 230, 1)' --| rgba format
+                },
             },
         }
     },
@@ -88,7 +98,12 @@ Config.Locations = {
                 option = {
                     buy = 1000,
                     sell = 200
-                }
+                },
+
+                icon = {
+                    type = 'fa-solid fa-user', --| https://fontawesome.com/search?q=coding&o=r&m=free
+                    color = 'rgba(173, 216, 230, 1)' --| rgba format
+                },
             },
             {
                 label = 'Ammo',
@@ -96,7 +111,12 @@ Config.Locations = {
                 option = {
                     buy = 10,
                     sell = false
-                }
+                },
+
+                icon = {
+                    type = 'fa-solid fa-user', --| https://fontawesome.com/search?q=coding&o=r&m=free
+                    color = 'rgba(173, 216, 230, 1)' --| rgba format
+                },
             },
         }
     }

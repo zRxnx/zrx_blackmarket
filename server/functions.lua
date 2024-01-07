@@ -40,7 +40,7 @@ StartRandomLocation = function(index)
 
         SetTimeout(temp.location.randomLocationInterval * 1000 * 60, function()
             math.randomseed(GetGameTimer())
-            Wait()
+            Wait(0)
             local coords = temp.location.coords[math.random(#temp.location.coords)]
             local message = ([[
                 The dealer moved
