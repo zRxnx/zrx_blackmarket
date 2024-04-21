@@ -52,6 +52,7 @@ end)
 
 RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, amount, price)
     price = price * amount
+    local xPlayer = CORE.Bridge.getPlayerObject(source)
     local ped = GetPlayerPed(source)
 	local pedCoords = GetEntityCoords(ped)
     local isAllowed = false
@@ -75,13 +76,13 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
 	end
 
     if action == 'buy' then
-        local xMoney = CORE.Bridge.getAccount(source, Config.Account).money
+        local xMoney = xPlayer.getAccount(Config.Account).money
 
         if xMoney >= price then
-            if CORE.Bridge.canCarryItem(source, item, amount) then
-                CORE.Bridge.removeAccountMoney(source, Config.Account, price)
-                CORE.Bridge.addInventoryItem(source, item, amount)
-                CORE.Bridge.notification(source, (Strings.bought):format(amount, item, lib.math.groupdigits(price, '.')))
+            if xPlayer.canCarryItem(item, amount) then
+                xPlayer.removeAccountMoney(Config.Account, price)
+                xPlayer.addInventoryItem(item, amount)
+                xPlayer.notification((Strings.bought):format(amount, item, lib.math.groupdigits(price, '.')))
 
                 if Webhook.Links.bought:len() > 0 then
                     local message = ([[
@@ -101,12 +102,12 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
             CORE.Bridge.notification(source, (Strings.lack_money):format(lib.math.groupdigits(price - xMoney, '.')))
         end
     elseif action == 'sell' then
-        local count = CORE.Bridge.getItemCount(source, item)
+        local count = xPlayer.getItemCount(item)
 
         if count >= amount then
-            CORE.Bridge.addAccountMoney(source, Config.Account, price)
-            CORE.Bridge.removeInventoryItem(source, item, amount)
-            CORE.Bridge.notification(source, (Strings.sold):format(amount, item, lib.math.groupdigits(price, '.')))
+            xPlayer.addAccountMoney(Config.Account, price)
+            xPlayer.removeInventoryItem(item, amount)
+            xPlayer.notification((Strings.sold):format(amount, item, lib.math.groupdigits(price, '.')))
 
             if Webhook.Links.sold:len() > 0 then
                 local message = ([[

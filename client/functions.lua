@@ -3,7 +3,7 @@ local vector3 = vector3
 local GetEntityCoords = GetEntityCoords
 
 OpenShopMenu = function(data)
-    if Config.BlockedJobs[CORE.Bridge.getVariables().job.name] then
+    if Config.BlockedJobs[CORE.Bridge.getPlayerObject().job.name] then
         return CORE.Bridge.notification(Strings.not_permitted)
     end
 

@@ -25,7 +25,7 @@ StartSyncBlip = function(coords)
     local xPlayer
 
     for player, state in pairs(PLAYERS) do
-        xPlayer = CORE.Bridge.getVariables(player)
+        xPlayer = CORE.Bridge.getPlayerObject(player)
 
         if Config.Alert.jobs[xPlayer.job.name] then
             CORE.Bridge.notification(player, Strings.alert)
