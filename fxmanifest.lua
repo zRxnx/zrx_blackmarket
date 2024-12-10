@@ -5,7 +5,7 @@ use_experimental_fxv2_oal 'yes'
 
 author 'zRxnx'
 description 'Advanced blackmarket system'
-version '1.4.1'
+version '1.5.0'
 
 docs 'https://docs.zrxnx.at'
 discord 'https://discord.gg/mcN25FJ33K'
@@ -13,7 +13,6 @@ discord 'https://discord.gg/mcN25FJ33K'
 dependencies {
     'zrx_utility',
 	'ox_lib',
-    'ox_target'
 }
 
 shared_scripts {

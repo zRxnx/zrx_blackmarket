@@ -22,5 +22,8 @@ Strings = {
     cannot_carry = 'You cannot carry %sx %s',
     lack_money = 'You lack $%s',
     sold = 'You sold %sx %s for $%s',
-    lack_items = 'You lack %sx %s'
+    lack_items = 'You lack %sx %s',
+
+    command_desc = 'Open the blackmarket',
+    open_menu = '[E] - Open %s menu'
 }

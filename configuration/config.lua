@@ -5,6 +5,9 @@ Config.DrawDistance = 20 --| Distance in units to see ped
 Config.Cooldown = 3 --| In seconds
 Config.Account = 'money' --| Used account to pay/sell
 Config.IconColor  = 'rgba(173, 216, 230, 1)' --| rgba format | Default
+Config.UseOxTarget = false
+Config.InteractDistance = 2
+Config.ShowDistance = 50
 
 Config.Menu = {
     type = 'context', --| context or menu
@@ -27,6 +30,13 @@ Config.Locations = {
             dict = 'mini@strip_club@idles@bouncer@base',
             name = 'base'
         }, --| Animation to play
+
+        marker = {
+            enabled = true,
+            type = 1,
+            color = { r = 255, g = 255, b = 255, a = 255 },
+            size = vec3(0.5, 0.5, 0.5),
+        },
 
         location = {
             randomLocationInterval = 60, --| Will pick x interval a random location | false to disable | In minutes
@@ -78,6 +88,13 @@ Config.Locations = {
             dict = 'mini@strip_club@idles@bouncer@base',
             name = 'base'
         }, --| Animation to play
+
+        marker = {
+            enabled = true,
+            type = 1,
+            color = { r = 255, g = 255, b = 255, a = 255 },
+            size = vec3(0.5, 0.5, 0.5),
+        },
 
         location = {
             randomLocationInterval = 60, --| Will pick x interval a random location | false to disable | In minutes

@@ -1,7 +1,3 @@
-local TriggerClientEvent = TriggerClientEvent
-local vector4 = vector4
-local GetGameTimer = GetGameTimer
-
 Player = {
     HasCooldown = function(player)
         if not Config.Cooldown then return false end
@@ -52,7 +48,7 @@ StartRandomLocation = function(index)
 
             CORE.Server.DiscordLog(source, 'RANDOM LOCATION', message, Webhook.Links.randomloc)
 
-            TriggerClientEvent('zrx_blackmarket:server:randomLocation', -1, index, vector4(coords.x, coords.y, coords.z, coords[4]))
+            TriggerClientEvent('zrx_blackmarket:server:randomLocation', -1, index, vector4(coords.x, coords.y, coords.z, coords.w))
             StartRandomLocation(index)
 
             LOC_DATA[index] = coords

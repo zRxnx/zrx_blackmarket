@@ -1,13 +1,9 @@
-local TriggerServerEvent = TriggerServerEvent
-local vector3 = vector3
-local GetEntityCoords = GetEntityCoords
-
-OpenShopMenu = function(data)
+OpenShopMenu = function(index)
+    local data = Config.Locations[index]
     if Config.BlockedJobs[CORE.Bridge.getPlayerObject().job.name] then
         return CORE.Bridge.notification(Strings.not_permitted)
     end
 
-    data = data.args
     local MENU = {}
 
     for i, data2 in pairs(data.content) do

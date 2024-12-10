@@ -1,14 +1,13 @@
 ---@diagnostic disable: cast-local-type, need-check-nil
 CORE = exports.zrx_utility:GetUtility()
-PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS = {}, {}, {}, {}, {}
-local GetPlayers = GetPlayers
-local GetPlayerPed = GetPlayerPed
-local GetEntityCoords = GetEntityCoords
-local vector3 = vector3
-local GetGameTimer = GetGameTimer
+PLAYER_CACHE, FETCHED, COOLDOWN, LOC_DATA, PLAYERS, FINISHED = {}, {}, {}, {}, {}, true
 
 RegisterNetEvent('zrx_utility:bridge:playerLoaded', function(player)
     PLAYER_CACHE[player] = CORE.Server.GetPlayerCache(player)
+
+    Wait(1000)
+
+    TriggerClientEvent('zrx_blackmarket:client:startBlackmarket', player, LOC_DATA)
 end)
 
 CreateThread(function()
@@ -30,20 +29,10 @@ CreateThread(function()
             StartRandomLocation(i)
         end
     end
-end)
 
-lib.callback.register('zrx_blackmarket:server:getLocations', function(source)
-    if not FETCHED[source] then
-        FETCHED[source] = true
+    Wait(1000)
 
-        lib.waitFor(function()
-            return #LOC_DATA == #Config.Locations
-        end, 'Location timeout', 10000)
-
-	    return LOC_DATA or {}
-    else
-        Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:getLocations"')
-    end
+    TriggerClientEvent('zrx_blackmarket:client:startBlackmarket', -1, LOC_DATA)
 end)
 
 AddEventHandler('playerDropped', function()
@@ -71,8 +60,7 @@ RegisterNetEvent('zrx_blackmarket:server:processAction', function(action, item, 
 	end
 
 	if not isAllowed then
-        print('ban')
-		--return Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
+		return Config.PunishPlayer(source, 'Tried to trigger "zrx_blackmarket:server:processAction"')
 	end
 
     if action == 'buy' then
