@@ -14,8 +14,7 @@ AddEventHandler('onResourceStop', function(res)
 end)
 
 if not Config.UseOxTarget then
-	RegisterKeyMapping('openNearbyBlackmarket', Strings.command_desc, 'keyboard', 'e')
-	RegisterCommand('openNearbyBlackmarket', function()
+	CORE.Client.RegisterKeyMappingCommand('openNearbyBlackmarket', Strings.command_desc, 'e', function()
 		local pedCoords = GetEntityCoords(cache.ped)
 
 		for i, data in ipairs(Config.Locations) do
